@@ -3,16 +3,35 @@ using System.Collections;
 using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
+using UnityEngine.Rendering.VirtualTexturing;
+using static UnityEditor.Progress;
 
 public class BoardManager : MonoBehaviour
 {
+    public int maxItems = 2 ;
 
+    //General
     public GameObject board;
     private bool isActive;
     public Controller controller;
 
+    //Right Part
     public Action currentAction = null; 
-    public string ButtonName = null; 
+    public string ButtonName = null;
+
+
+    //Left Part
+    public GameObject leftSlot;
+    public GameObject leftItem;
+    public GameObject rightSlot;
+    public GameObject rightItem;
+    public GameObject upSlot;
+    public GameObject upItem;
+    public GameObject downSlot;
+    public GameObject downItem;
+    public GameObject chosenItem;
+    public HashSet<string> activeItems = new HashSet<string>();
+    public string chosenSlot = "";
 
     private void Awake()
     {
@@ -78,4 +97,155 @@ public class BoardManager : MonoBehaviour
             ChangeButtonAction();
         }
     }
+
+    void equipItem(GameObject myItem, string slot)
+    {
+        if (activeItems.Contains(myItem.name)) return;
+        activeItems.Add(myItem.name);
+
+
+        GameObject newObj = Instantiate(myItem);
+        newObj.transform.localScale = Vector3.zero;
+        StartCoroutine(ScaleIn(newObj, 0.1f));
+        newObj.transform.SetParent(controller.transform);
+        Vector3 newCord = Vector3.zero;
+        Quaternion newRotation = Quaternion.identity;
+        if (slot == "up")
+        {
+            if (upItem != null) removeItem(upItem);
+            newCord.y = myItem.GetComponent<itemHandler>().distance;
+            newRotation = Quaternion.Euler(0, 0, myItem.GetComponent<itemHandler>().startRotation - 180);
+            upItem = newObj;
+            newObj.transform.localPosition = newCord;
+            newObj.transform.localRotation = newRotation;
+            if (Itemcount() > maxItems)
+            {
+                Destroy(upItem);
+                return;
+            }
+        }
+        if (slot == "down")
+        {
+            if (downItem != null) removeItem(downItem);
+            newCord.y = -myItem.GetComponent<itemHandler>().distance;
+            newRotation = Quaternion.Euler(0, 0, myItem.GetComponent<itemHandler>().startRotation);
+            downItem = newObj;
+            newObj.transform.localPosition = newCord;
+            newObj.transform.localRotation = newRotation;
+            if (Itemcount() > maxItems) { Destroy(downItem); return; }
+        }
+        if (slot == "right") 
+        { 
+            if(rightItem != null) removeItem(rightItem);
+            newCord.x = myItem.GetComponent<itemHandler>().distance;
+            newRotation = Quaternion.Euler(0, 0, myItem.GetComponent<itemHandler>().startRotation - 270);
+            rightItem = newObj;
+            newObj.transform.localPosition = newCord;
+            newObj.transform.localRotation = newRotation;
+            if (Itemcount() > maxItems) { Destroy(rightItem); return; }
+        }
+        if(slot == "left") 
+        {
+            if (leftItem != null) removeItem(leftItem);
+            newCord.x = -myItem.GetComponent<itemHandler>().distance;
+            newRotation = Quaternion.Euler(0, 0, myItem.GetComponent<itemHandler>().startRotation - 90);
+            leftItem = newObj;
+            newObj.transform.localPosition = newCord;
+            newObj.transform.localRotation = newRotation;
+            if (Itemcount() > maxItems) { Destroy(leftItem); return; }
+        }
+
+        if (myItem.name == "Car") handleCar(newObj);
+
+    }
+
+    void removeItem(GameObject _item)
+    {
+        activeItems.Remove(_item.name[..^7]);
+        if (_item.name == "Car") controller.canCarMove = false; 
+        Destroy(_item);
+    }
+
+    public void choseItem(GameObject _item)
+    {
+        chosenItem = _item;
+        if (chosenSlot != "")
+        {
+            
+            equipItem(chosenItem, chosenSlot);
+            chosenItem = null;
+            chosenSlot = "";
+        }
+    }
+
+    void handleCar(GameObject car)
+    {
+        Debug.Log("test");
+        controller.carGroundCheck1 = car.GetComponent<itemHandler>().carG1.transform;
+        controller.carGroundCheck2 = car.GetComponent<itemHandler>().carG2.transform;
+        controller.canCarMove = true;
+    }
+
+    public void choseSlot(string _slot)
+    {
+        if(chosenSlot == _slot)
+        {
+            switch (chosenSlot)
+            {
+                case "up":
+                    activeItems.Remove(upItem.name[..^7]);
+                    Destroy(upItem);
+                    break;
+                case "down":
+                    activeItems.Remove(downItem.name[..^7]);
+                    Destroy(downItem);
+                    break;
+                case "left":
+                    activeItems.Remove(leftItem.name[..^7]);
+                    Destroy(leftItem);
+                    break;
+                case "right":
+                    activeItems.Remove(rightItem.name[..^7]);
+                    Destroy(rightItem);
+                    break;
+            }
+            chosenSlot = "";
+            return;
+        }
+        chosenSlot = _slot;
+        if (chosenItem != null)
+        {
+            equipItem(chosenItem, chosenSlot);
+            chosenItem = null;
+            chosenSlot = "";
+        }
+    }
+
+
+    public int Itemcount()
+    {
+        int count = 0;
+        if(leftItem != null) count++;
+        if(rightItem != null) count++;
+        if(upItem != null) count++;
+        if(downItem != null) count++;
+        return count;
+    }
+
+    IEnumerator ScaleIn(GameObject obj, float duration)
+    {
+        Vector3 startScale = Vector3.zero;
+        Vector3 targetScale = Vector3.one;
+        float t = 0f;
+
+        while (t < duration)
+        {
+            t += Time.deltaTime;
+            obj.transform.localScale = Vector3.Lerp(startScale, targetScale, t / duration);
+            yield return null;
+        }
+
+        obj.transform.localScale = targetScale;
+    }
+
 }
