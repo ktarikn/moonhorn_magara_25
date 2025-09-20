@@ -21,10 +21,13 @@ public class Plate : MonoBehaviour
     [Tooltip("Bu plaka basýldýðýnda kontrol edilecek kapý")]
     [SerializeField] private Door doorToControl;
 
+    [Tooltip("Bu plaka basýldýðýnda kontrol edilecek lazer (isteðe baðlý)")]
+    [SerializeField] private Laser_Controller laserToControl;
+
     private SpriteRenderer buttonSpriteRenderer;
     private Vector3 originalPosition;
     private Vector3 targetPosition;
-    private List<Rigidbody2D> objectsOnPlate = new List<Rigidbody2D>();
+    private List<Rigidbody2D> objectsOnPlate = new();
 
     void Start()
     {
@@ -56,6 +59,18 @@ public class Plate : MonoBehaviour
         buttonTransform.position = Vector3.Lerp(buttonTransform.position, targetPosition, Time.fixedDeltaTime * moveSpeed);
     }
 
+
+
+
+
+
+
+
+
+
+
+
+
     // --- AddObject ve RemoveObject METOTLARINI GÜNCELLEYELÝM ---
 
     public void AddObject(Rigidbody2D rb)
@@ -63,10 +78,10 @@ public class Plate : MonoBehaviour
         if (!objectsOnPlate.Contains(rb))
         {
             // Eðer bu, plakanýn üzerine konan ÝLK nesne ise...
-            if (objectsOnPlate.Count == 0 && doorToControl != null)
+            if (objectsOnPlate.Count == 0)
             {
-                // Kapýya açýl komutu gönder
-                doorToControl.OpenDoor();
+                doorToControl?.OpenDoor();
+                laserToControl?.DeactivateLaser();
             }
 
             objectsOnPlate.Add(rb);
@@ -81,12 +96,13 @@ public class Plate : MonoBehaviour
             objectsOnPlate.Remove(rb);
 
             // Eðer bu nesne kalktýktan sonra plakanýn üzerinde HÝÇ nesne kalmadýysa...
-            if (objectsOnPlate.Count == 0 && doorToControl != null)
+            if (objectsOnPlate.Count == 0)
             {
-                // Kapýya kapan komutu gönder
-                doorToControl.CloseDoor();
+                doorToControl?.CloseDoor();
+                laserToControl?.ActivateLaser();
+
+                SetColor();
             }
-            SetColor();
         }
     }
 
