@@ -5,7 +5,7 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
 using UnityEngine.UI;
-using static UnityEditor.Progress;
+
 
 public class BoardManager : MonoBehaviour
 {
