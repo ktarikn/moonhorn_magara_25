@@ -43,7 +43,14 @@ public class Missle : MonoBehaviour
 
     private void OnTriggerEnter2D(Collider2D collision)
     {
-        //hitplayer
+        if (collision.gameObject.CompareTag("Player"))
+        {
+            PlayerRespawn respawn = collision.GetComponent<PlayerRespawn>();
+            if (respawn != null)
+            {
+                respawn.TakeDamage();
+            }
+        }
     }
 
     
