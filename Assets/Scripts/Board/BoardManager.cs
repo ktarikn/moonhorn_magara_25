@@ -234,15 +234,23 @@ public class BoardManager : MonoBehaviour
             {
                 case "up":
                     removeItem(upItem);
+                    Destroy(topImage);
+                    upItem = null;
                     break;
                 case "down":
                     removeItem(downItem);
+                    Destroy(downImage);
+                    downItem = null;
                     break;
                 case "left":
                     removeItem(leftItem);
+                    Destroy(leftImage);
+                    leftItem = null;    
                     break;
                 case "right":
                     removeItem(rightItem);
+                    Destroy(rightImage);  
+                    rightItem = null;
                     break;
             }
             chosenSlot = "";
@@ -298,6 +306,7 @@ public class BoardManager : MonoBehaviour
                 }
                 break;
         }
+        updateSlots();
         return count;
     }
 
@@ -345,10 +354,14 @@ public class BoardManager : MonoBehaviour
     public GameObject downImage;
     void updateSlots()
     {
-        Destroy(leftImage);
-        Destroy(rightImage);
-        Destroy(topImage);
-        Destroy(downImage);
+        if(topImage!= null) Destroy(topImage);
+        if (leftImage != null) Destroy(leftImage);
+        if (rightImage != null) Destroy(rightImage);
+        if (downImage != null) Destroy(downImage);
+        topImage = null;
+        leftImage = null;
+        rightImage = null;
+        downImage = null;
         if (leftItem != null)
         {
             switch (leftItem.name[..^7])
@@ -366,7 +379,6 @@ public class BoardManager : MonoBehaviour
                     leftImage = Instantiate(gunImg, leftSlot.transform);
                     break;
             }
-            leftImage.transform.rotation = new Quaternion(0, 0, 90, 0);
         }
         if (rightItem != null)
         {
@@ -385,7 +397,6 @@ public class BoardManager : MonoBehaviour
                     rightImage = Instantiate(gunImg, rightSlot.transform);
                     break;
             }
-            rightImage.transform.rotation = new Quaternion(0, 0, -90, 0);
         }
         if (upItem != null)
         {
@@ -405,7 +416,6 @@ public class BoardManager : MonoBehaviour
                     topImage = Instantiate(gunImg, upSlot.transform);
                     break;
             }
-            topImage.transform.rotation = new Quaternion(0, 0, 180, 0);
         }
         if (downItem != null)
         {
@@ -424,7 +434,6 @@ public class BoardManager : MonoBehaviour
                     downImage = Instantiate(gunImg, downSlot.transform);
                     break;
             }
-            downImage.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
     }
 }
