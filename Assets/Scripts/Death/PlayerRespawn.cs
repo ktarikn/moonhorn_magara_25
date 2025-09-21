@@ -11,6 +11,9 @@ public class PlayerRespawn : MonoBehaviour
 
     private Vector3 lastCheckpointPosition;
     private bool isRespawning = false;
+    private bool isTakingDamage = false;
+
+    public int health = 3;
 
     // cache
     private Rigidbody2D rb;
@@ -37,10 +40,20 @@ public class PlayerRespawn : MonoBehaviour
     public void Respawn()
     {
         if (!isRespawning)
-            StartCoroutine(RespawnRoutine());
+            RespawnToCheckpoint();
     }
 
-    private IEnumerator RespawnRoutine()
+    public void TakeDamage()
+    {
+        if (!isTakingDamage)
+        {
+            StartCoroutine(Damage());
+        }
+    }
+
+
+
+    private void RespawnToCheckpoint()
     {
         isRespawning = true;
 
@@ -62,25 +75,7 @@ public class PlayerRespawn : MonoBehaviour
             b.enabled = false;
         }
 
-        // 3) sprite'larý kýrmýzý yap
-        originalColors.Clear();
-        foreach (var sr in spriteRenderers)
-        {
-            originalColors[sr] = sr.color;
-            sr.color = hitColor;
-        }
-
-        // (Ýstersen burada ses/particles tetikleyebilirsin)
-
-        // 4) bekle (hasar görünümü)
-        yield return new WaitForSeconds(respawnFreezeTime);
-
-        // 5) renkleri geri döndür
-        foreach (var kv in originalColors)
-        {
-            if (kv.Key != null)
-                kv.Key.color = kv.Value;
-        }
+        StartCoroutine(Damage());
 
         // 6) oyuncuyu checkpoint'e taþý
         transform.position = new Vector3(lastCheckpointPosition.x, lastCheckpointPosition.y, transform.position.z);
@@ -100,5 +95,38 @@ public class PlayerRespawn : MonoBehaviour
         }
 
         isRespawning = false;
+    }
+
+    private IEnumerator Damage()
+    {
+        // 3) sprite'larý kýrmýzý yap
+        isTakingDamage = true;
+
+        originalColors.Clear();
+        foreach (var sr in spriteRenderers)
+        {
+            originalColors[sr] = sr.color;
+            sr.color = hitColor;
+        }
+
+        // (Ýstersen burada ses/particles tetikleyebilirsin)
+
+        health--;
+        if(health <=0)
+        {
+            //ölüm
+        }
+
+        // 4) bekle (hasar görünümü)
+        yield return new WaitForSeconds(respawnFreezeTime);
+
+        // 5) renkleri geri döndür
+        foreach (var kv in originalColors)
+        {
+            if (kv.Key != null)
+                kv.Key.color = kv.Value;
+        }
+
+        isTakingDamage = false;
     }
 }
