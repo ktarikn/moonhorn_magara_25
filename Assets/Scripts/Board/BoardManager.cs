@@ -114,6 +114,7 @@ public class BoardManager : MonoBehaviour
 
     void equipItem(GameObject myItem, string slot)
     {
+        if (Itemcount() > maxItems - 1) return;
         if (activeItems.Contains(myItem.name)) return;
         activeItems.Add(myItem.name);
 
@@ -187,6 +188,8 @@ public class BoardManager : MonoBehaviour
     }
     void removeItem(GameObject _item)
     {
+        if (_item == null) return;
+        if (!activeItems.Contains(_item.name[..^7])) return;
         activeItems.Remove(_item.name[..^7]);
         Debug.Log(_item.name[..^7]);
         if (_item.name[..^7] == "Car") { Destroy(_item); controller.canCarMove = false; }
@@ -254,6 +257,7 @@ public class BoardManager : MonoBehaviour
                     break;
             }
             chosenSlot = "";
+            Itemcount();
             return;
         }
         chosenSlot = _slot;
@@ -302,7 +306,7 @@ public class BoardManager : MonoBehaviour
                 }
                 break;
         }
-        updateSlots();
+        if(maxItems >= count)updateSlots();
         return count;
     }
 
