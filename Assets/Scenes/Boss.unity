@@ -3586,9 +3586,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   boardManager: {fileID: 0}
-  rollSpeed: 148.5
-  maxAngularSpeed: 300
-  moveSpeed: 10.4
+  rollSpeed: 200
+  maxAngularSpeed: 160
+  moveSpeed: 10.5
   canCarMove: 0
   carGroundCheck1: {fileID: 0}
   carGroundCheck2: {fileID: 0}
@@ -4682,7 +4682,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   audios:
-  - {fileID: 8300000, guid: c53ce3ffae0a92746bec784f99d95982, type: 3}
+  - {fileID: 8300000, guid: 96c17c5cf624d614a89cda41f0e81881, type: 3}
   - {fileID: 0}
   - {fileID: 0}
   - {fileID: 0}
