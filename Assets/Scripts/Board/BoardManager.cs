@@ -106,7 +106,7 @@ public class BoardManager : MonoBehaviour
 
         GameObject newObj = Instantiate(myItem);
         newObj.transform.localScale = Vector3.zero;
-        StartCoroutine(ScaleIn(newObj, 0.1f));
+        StartCoroutine(ScaleIn(newObj, 0.2f));
         newObj.transform.SetParent(controller.transform);
         Vector3 newCord = Vector3.zero;
         Quaternion newRotation = Quaternion.identity;
@@ -156,14 +156,22 @@ public class BoardManager : MonoBehaviour
         }
 
         if (myItem.name == "Car") handleCar(newObj);
+        if (myItem.name == "Gun") handleGun(newObj);
 
     }
 
+    void handleGun(GameObject obj)
+    {
+        controller.canShoot = true;
+        controller.gun = obj;
+    }
     void removeItem(GameObject _item)
     {
         activeItems.Remove(_item.name[..^7]);
-        if (_item.name == "Car") controller.canCarMove = false; 
-        Destroy(_item);
+        Debug.Log(_item.name[..^7]);
+        if (_item.name[..^7] == "Car") { Destroy(_item); controller.canCarMove = false; } 
+        if (_item.name[..^7] == "Gun") controller.canShoot = false; 
+        
     }
 
     public void choseItem(GameObject _item)
@@ -171,7 +179,6 @@ public class BoardManager : MonoBehaviour
         chosenItem = _item;
         if (chosenSlot != "")
         {
-            
             equipItem(chosenItem, chosenSlot);
             chosenItem = null;
             chosenSlot = "";
@@ -193,20 +200,16 @@ public class BoardManager : MonoBehaviour
             switch (chosenSlot)
             {
                 case "up":
-                    activeItems.Remove(upItem.name[..^7]);
-                    Destroy(upItem);
+                    removeItem(upItem);
                     break;
                 case "down":
-                    activeItems.Remove(downItem.name[..^7]);
-                    Destroy(downItem);
+                    removeItem(downItem);
                     break;
                 case "left":
-                    activeItems.Remove(leftItem.name[..^7]);
-                    Destroy(leftItem);
+                    removeItem(leftItem);
                     break;
                 case "right":
-                    activeItems.Remove(rightItem.name[..^7]);
-                    Destroy(rightItem);
+                    removeItem(rightItem);
                     break;
             }
             chosenSlot = "";

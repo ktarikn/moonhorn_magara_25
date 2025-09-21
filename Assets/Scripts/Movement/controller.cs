@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Security.Cryptography;
 using UnityEngine;
 
@@ -21,6 +22,8 @@ public class Controller : MonoBehaviour
     public LayerMask groundLayer;
     public bool isGrounded;
 
+    public GameObject gun;
+
 
     void Start()
     {
@@ -35,17 +38,23 @@ public class Controller : MonoBehaviour
         {
             if (isGrounded) rideLeft();
         }
-        if (Input.GetKey(KeyCode.D))
+        
+        else if (Input.GetKey(KeyCode.D))
         {
             if (isGrounded) rideRight();
         }
+        else if (rb.velocity.x !=0)
+        {
+            toZero();
+        }
+
         if (Input.GetKey(KeyCode.W))
         {
             TryFly(); // uçmayý deneyelim
         }
         if (Input.GetKey(KeyCode.S))
         {
-            keySAction?.Invoke();
+            //empty
         }
         if (Input.GetKey(KeyCode.Q))
         {
@@ -55,6 +64,9 @@ public class Controller : MonoBehaviour
         {
             RollRight();
         }
+        if (Input.GetMouseButtonDown(0)) {
+            if (canShoot) shoot(gun);
+        }
     }
 
     void FixedUpdate()
@@ -63,6 +75,11 @@ public class Controller : MonoBehaviour
         rb.angularVelocity = Mathf.Clamp(rb.angularVelocity, -maxAngularSpeed, maxAngularSpeed);
     }
 
+    public float drag = 2f;
+    void toZero()
+    {
+        rb.velocity = rb.velocity.x>0? new Vector2(rb.velocity.x -drag *Time.deltaTime, rb.velocity.y): new Vector2(rb.velocity.x + drag * Time.deltaTime, rb.velocity.y);
+    }
     public void RollLeft()
     {
         rb.angularVelocity = rollSpeed;
@@ -77,13 +94,15 @@ public class Controller : MonoBehaviour
     public void rideLeft()
     {
         Vector2 leftDir = -transform.right; // local -X yönü
-        rb.velocity = leftDir * moveSpeed;
+        rb.AddForce(leftDir * moveSpeed *3);
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed),rb.velocity.y);
     }
 
     public void rideRight()
     {
         Vector2 rightDir = transform.right; // local -X yönü
-        rb.velocity = rightDir * moveSpeed;
+        rb.AddForce(rightDir * moveSpeed *3);
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
     }
     // --- Fly Sistemi ---
     public float flySpeed = 10f;
@@ -141,6 +160,32 @@ public class Controller : MonoBehaviour
             {
                 canFly = true;
             }
+        }
+    }
+
+    public GameObject ammo;
+    public float projectileSpeed;
+    public GameObject firstAmmo;
+    public GameObject secondAmmo;
+    public GameObject thirdAmmo;
+    public bool canShoot;
+
+    void shoot(GameObject myGun)
+    {
+        GameObject newAmmo = Instantiate(ammo);
+        newAmmo.transform.position = myGun.transform.position;
+        newAmmo.transform.rotation = myGun.transform.localRotation;
+        newAmmo.GetComponent<Rigidbody2D>().velocity = myGun.transform.right * projectileSpeed;
+        Debug.Log(newAmmo.GetComponent<Rigidbody2D>().velocity);
+        if(firstAmmo == null) firstAmmo = newAmmo;
+        else if(secondAmmo == null) secondAmmo = newAmmo;
+        else if (thirdAmmo == null) thirdAmmo = newAmmo;
+        else
+        {
+            Destroy(firstAmmo);
+            firstAmmo = secondAmmo;
+            secondAmmo = thirdAmmo;
+            thirdAmmo = newAmmo;
         }
     }
 }
