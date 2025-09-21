@@ -51,6 +51,11 @@ public class Missle : MonoBehaviour
                 respawn.TakeDamage();
             }
         }
+        else if (collision.gameObject.CompareTag("Boss"))
+        {
+            BossHealth boss = collision.GetComponent<BossHealth>();
+            boss.getHit();
+        }
     }
 
     
