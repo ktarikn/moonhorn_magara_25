@@ -4,6 +4,8 @@ using UnityEngine.Rendering.Universal; // Light2D için bu kütüphane gerekli
 
 public class Interact : MonoBehaviour
 {
+
+    [SerializeField] private GameObject eye_;
     // Inspector'dan sürükleyip býrakacaðýmýz Iþýk objesi
     [SerializeField] private Light2D playerLight;
 
@@ -15,6 +17,11 @@ public class Interact : MonoBehaviour
 
     private GameObject collectibleInRange = null; // Tetikleyici alanýndaki toplanabilir obje
     private bool isLightExpanding = false; // Iþýðýn zaten büyümediðinden emin olmak için kontrol
+
+    private void Start()
+    {
+        eye_.gameObject.SetActive(false);
+    }
 
     private void Update()
     {
@@ -36,6 +43,8 @@ public class Interact : MonoBehaviour
 
         // Referansý temizle ki tekrar F'ye basýlmasýn
         collectibleInRange = null;
+
+        eye_.gameObject.SetActive(true);
     }
 
     // Karakter bir tetikleyiciye girdiðinde çalýþýr
