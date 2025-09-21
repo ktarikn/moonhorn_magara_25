@@ -28,11 +28,14 @@ public class Conveyor : MonoBehaviour
     // Üzerinde duran nesneleri hareket ettir
     private void OnTriggerStay2D(Collider2D collision)
     {
-        // Hareket vektörünü hesapla (Bu kýsým ayný kalýyor)
-        Vector3 move = speed * Time.deltaTime * (isRight ? Vector3.right : Vector3.left);
+        if (collision.CompareTag("Player"))
+        {
+            // Hareket vektörünü hesapla (Bu kýsým ayný kalýyor)
+            Vector3 move = speed * Time.deltaTime * (isRight ? Vector3.right : Vector3.left);
 
-        // DÜZELTME: Hareketi objenin kendi yönüne göre deðil,
-        // dünyanýn yönüne göre ("Space.World") uygula.
-        collision.transform.Translate(move, Space.World);
+            // DÜZELTME: Hareketi objenin kendi yönüne göre deðil,
+            // dünyanýn yönüne göre ("Space.World") uygula.
+            collision.transform.Translate(move, Space.World);
+        }
     }
 }

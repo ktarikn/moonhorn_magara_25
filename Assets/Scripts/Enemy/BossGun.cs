@@ -1,24 +1,29 @@
 using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 public class BossGun : MonoBehaviour
 {
-    // Start is called before the first frame update
+    // Inspector'dan kolayca ayarlanabilir deðiþkenler
+    [Header("Hedefleme Ayarlarý")]
+    [SerializeField] private float maxDistance = 10f;
+    [SerializeField] private LayerMask hitLayers;
+    [SerializeField] private bool lockOnPlayer = true;
+
+    [Header("Mermi Ayarlarý")]
+    [SerializeField] private GameObject bulletPrefab;
+    [SerializeField] private Transform muzzleTransform; // Mermi çýkýþ noktasý
+    [SerializeField] private float bulletSpeed = 10f; // Mermi hýzý
+    [SerializeField] private float shootInterval = 3f;
+
+    [Header("Atýþ Deseni")]
+    [SerializeField] private int numberOfBullets = 3;
+    [SerializeField] private float spreadAngle = 45f;
+
     private Transform player;
 
-    public GameObject bulletPrefab;
-    public Vector2 muzzle { get { return transform.GetChild(0).position; } set { } }
-    private bool lockedOn = false;
-    public float maxDistance = 10f;
-    public LayerMask hitLayers = Physics2D.DefaultRaycastLayers;
-
-    public float shootInterval = 3f;
-
-    void Start()
+    private void Start()
     {
-        
-
+        // Oyuncuyu bul ve null kontrolü yap
         GameObject playerObj = GameObject.FindGameObjectWithTag("Player");
         if (playerObj != null)
         {
@@ -29,56 +34,65 @@ public class BossGun : MonoBehaviour
             Debug.LogWarning("No GameObject with tag 'Player' found!");
         }
 
-        StartCoroutine(LaserPattern());
+        // Atýþ Coroutine'ini baþlat
+        StartCoroutine(ShootPattern());
     }
 
-
-    System.Collections.IEnumerator LaserPattern()
+    private void Update()
     {
-        while (true)
-        {
-            // --- 1 second on / 1 second off ---
-            yield return StartCoroutine(FireBullet(shootInterval));
-
-            
-
-        }
-    }
-
-    
-    System.Collections.IEnumerator FireBullet(float onTime)
-    {
-        // Laser ON
-        float timer = 0f;
-        while (timer < onTime)
-        {
-            
-            timer += Time.deltaTime;
-            yield return null;
-        }
-
-        if (bulletPrefab)
-            Instantiate(bulletPrefab, muzzle, transform.rotation);
-            Instantiate(bulletPrefab, muzzle, transform.rotation* Quaternion.Euler(0, 0, 45f));
-            Instantiate(bulletPrefab, muzzle, transform.rotation * Quaternion.Euler(0, 0, -45f));
-    }
-
-   
-
-   
-
-
-    // Update is called once per frame
-    void Update()
-    {
-        if (player != null && !lockedOn)
+        // Eðer kilitlenme aktifse, oyuncuya bak
+        if (player != null && lockOnPlayer)
         {
             Vector3 direction = player.position - transform.position;
             float angle = Mathf.Atan2(direction.y, direction.x) * Mathf.Rad2Deg;
-            transform.rotation = Quaternion.Euler(new Vector3(0, 0, angle));
+            transform.rotation = Quaternion.Euler(0, 0, angle);
         }
-
-
     }
 
+    private IEnumerator ShootPattern()
+    {
+        // Sonsuz döngüde atýþ yap
+        while (true)
+        {
+            // Atýþ aralýðý kadar bekle
+            yield return new WaitForSeconds(shootInterval);
+
+            // Mermi atýþ fonksiyonunu çaðýr
+            FireBullets();
+        }
+    }
+
+    private void FireBullets()
+    {
+        if (bulletPrefab == null || muzzleTransform == null || player == null)
+        {
+            Debug.LogWarning("Mermi prefab'ý, çýkýþ noktasý veya oyuncu atanmamýþ!");
+            return;
+        }
+
+        // Oyuncuya olan temel yönü hesapla
+        Vector3 directionToPlayer = (player.position - muzzleTransform.position).normalized;
+        float baseAngle = Mathf.Atan2(directionToPlayer.y, directionToPlayer.x) * Mathf.Rad2Deg;
+
+        // Toplam yayýlma açýsýný hesapla
+        float totalSpread = (numberOfBullets - 1) * spreadAngle;
+        float startingAngle = -totalSpread / 2;
+
+        for (int i = 0; i < numberOfBullets; i++)
+        {
+            // Her mermi için dönme açýsýný hesapla
+            float rotationOffset = startingAngle + i * spreadAngle;
+            Quaternion bulletRotation = Quaternion.Euler(0, 0, baseAngle + rotationOffset);
+
+            // Mermiyi oluþtur
+            GameObject newBullet = Instantiate(bulletPrefab, muzzleTransform.position, bulletRotation);
+
+            // Mermiye hýz ver
+            Rigidbody2D rb = newBullet.GetComponent<Rigidbody2D>();
+            if (rb != null)
+            {
+                rb.velocity = newBullet.transform.right * bulletSpeed;
+            }
+        }
+    }
 }

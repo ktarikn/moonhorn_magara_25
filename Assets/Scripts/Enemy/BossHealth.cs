@@ -10,13 +10,19 @@ public class BossHealth : MonoBehaviour
     public int lives = 3;
     private bool isTakingDamage = false;
 
-    private SpriteRenderer spriteRenderer;
+    [SerializeField] private SpriteRenderer sprite_1, sprite_2;
     [SerializeField] private Color hitColor = Color.red;
+    [SerializeField] private Transform childTransform;
+
+    [Header("level için")]
+    [SerializeField] private int scene_int;
 
     void Start()
     {
-        spriteRenderer = GetComponent<SpriteRenderer>();
-        spriteRenderer.enabled = false;
+        sprite_1 = GetComponent<SpriteRenderer>();
+        sprite_1.enabled = false;
+        sprite_2 = childTransform.GetComponent<SpriteRenderer>();
+        sprite_2.enabled = false;
     }
 
     // Update is called once per frame
@@ -29,32 +35,37 @@ public class BossHealth : MonoBehaviour
 
         if (lives <= 0)
         {
+            Debug.Log("uzun robot öldü");
 
-            //level_end()
+            SceneManager.LoadScene(scene_int);
         }
     }
     void Update()
     {
-        
+
     }
 
     private IEnumerator Damage()
     {
         isTakingDamage = true;
 
-        spriteRenderer.enabled = true;
+        sprite_1.enabled = true;
+        sprite_2.enabled = true;
 
         yield return new WaitForSeconds(0.7f);
 
-        spriteRenderer.enabled = false;
+        sprite_1.enabled = false;
+        sprite_2.enabled = false;
 
         yield return new WaitForSeconds(0.7f);
 
-        spriteRenderer.enabled = true;
+        sprite_1.enabled = true;
+        sprite_2.enabled = true;
 
         yield return new WaitForSeconds(0.7f);
 
-        spriteRenderer.enabled = false;
+        sprite_1.enabled = false;
+        sprite_2.enabled = false;
 
         isTakingDamage = false;
     }

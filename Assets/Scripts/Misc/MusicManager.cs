@@ -5,7 +5,7 @@ using UnityEngine;
 public class MusicManager : MonoBehaviour
 {
     [Tooltip("5 bits, eye, wheel, heli, magnet gun in order")]
-    [SerializeField] private AudioClip[] audios= new AudioClip[32];
+    [SerializeField] private AudioClip[] audios = new AudioClip[32];
 
     public int currentState;
     public int nextState;
@@ -17,7 +17,7 @@ public class MusicManager : MonoBehaviour
         source = GetComponent<AudioSource>();
     }
 
-    void RecieveChange(int state)
+    public void RecieveChange(int state)
     {
         nextState = state;
     }

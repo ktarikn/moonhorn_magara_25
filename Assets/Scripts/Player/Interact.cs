@@ -12,14 +12,14 @@ public class Interact : MonoBehaviour
     [Header("Aktif Edilecek Parçalar")]
     [Tooltip("Göz objesi toplandýðýnda aktif olacak child obje")]
     [SerializeField] private GameObject eyePart;
-    [Tooltip("Teker objesi toplandýðýnda aktif olacak child obje")]
+    /*[Tooltip("Teker objesi toplandýðýnda aktif olacak child obje")]
     [SerializeField] private GameObject wheelPart;
     [Tooltip("Mýknatýs objesi toplandýðýnda aktif olacak child obje")]
     [SerializeField] private GameObject magnetPart;
     [Tooltip("Silah objesi toplandýðýnda aktif olacak child obje")]
     [SerializeField] private GameObject weaponPart;
     [Tooltip("Drone objesi toplandýðýnda aktif olacak child obje")]
-    [SerializeField] private GameObject dronePart;
+    [SerializeField] private GameObject dronePart;*/
 
     private Items_enum itemInRange = null; // Menzildeki objenin CollectibleItem script'i
     private bool isLightExpanding = false;      // Iþýk büyüme animasyonunu kontrol eder
@@ -32,6 +32,7 @@ public class Interact : MonoBehaviour
         {
             // O objeyi "topla"
             Collect(itemInRange);
+            Debug.Log(itemInRange + "itemi aldýn");
         }
     }
 
@@ -55,19 +56,22 @@ public class Interact : MonoBehaviour
             case CollectibleType.Wheel:
                 // WheelPart objesi atanmýþsa onu aktif et
                 transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().carPicked = true;
-                Debug.Log("test");
+                Debug.Log("teker aldý");
                 break;
 
             case CollectibleType.Magnet:
                 transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().magnetPicked = true;
+                Debug.Log("magnet aldý");
                 break;
 
             case CollectibleType.Weapon:
-                transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().gunPicked  = true;
+                transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().gunPicked = true;
+                Debug.Log("silah aldý");
                 break;
 
             case CollectibleType.Drone:
                 transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().heliPicked = true;
+                Debug.Log("drone aldý");
                 break;
         }
 
