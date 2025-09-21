@@ -10,6 +10,8 @@ public class Controller : MonoBehaviour
     public Action keyWAction;
     public Action keySAction;
 
+    public GameObject boardManager;
+
     private Rigidbody2D rb;
     public float rollSpeed = 200f; // torque gücü
     public float maxAngularSpeed = 300f; // max dönme hýzý (derece/sn)
