@@ -33,17 +33,17 @@ public class Controller : MonoBehaviour
 
     void Update()
     {
-        if(canCarMove) isGrounded = Physics2D.OverlapCircle(carGroundCheck1.position, checkRadius, groundLayer) || Physics2D.OverlapCircle(carGroundCheck2.position, checkRadius, groundLayer);
+        if (canCarMove) isGrounded = Physics2D.OverlapCircle(carGroundCheck1.position, checkRadius, groundLayer) || Physics2D.OverlapCircle(carGroundCheck2.position, checkRadius, groundLayer);
         if (Input.GetKey(KeyCode.A))
         {
             if (isGrounded) rideLeft();
         }
-        
+
         else if (Input.GetKey(KeyCode.D))
         {
             if (isGrounded) rideRight();
         }
-        else if (rb.velocity.x !=0)
+        else if (rb.velocity.x != 0)
         {
             toZero();
         }
@@ -65,7 +65,16 @@ public class Controller : MonoBehaviour
             RollRight();
         }
         if (Input.GetMouseButtonDown(0)) {
-            if (canShoot) shoot(gun);
+            if (canShoot) shoot();
+        }
+        if (Input.GetMouseButton(1)) // mýknatýs aktif
+        {
+            PullObjects();
+        }
+        else
+        {
+            // Magnet býrakýlýnca Hold objesinden ayrýl
+            holdTarget = null;
         }
     }
 
@@ -78,7 +87,7 @@ public class Controller : MonoBehaviour
     public float drag = 2f;
     void toZero()
     {
-        rb.velocity = rb.velocity.x>0? new Vector2(rb.velocity.x -drag *Time.deltaTime, rb.velocity.y): new Vector2(rb.velocity.x + drag * Time.deltaTime, rb.velocity.y);
+        rb.velocity = rb.velocity.x > 0 ? new Vector2(rb.velocity.x - drag * Time.deltaTime, rb.velocity.y) : new Vector2(rb.velocity.x + drag * Time.deltaTime, rb.velocity.y);
     }
     public void RollLeft()
     {
@@ -90,18 +99,17 @@ public class Controller : MonoBehaviour
         rb.angularVelocity = -rollSpeed;
     }
 
-    public float moveForce = 50f;
     public void rideLeft()
     {
         Vector2 leftDir = -transform.right; // local -X yönü
-        rb.AddForce(leftDir * moveSpeed *3);
-        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed),rb.velocity.y);
+        rb.AddForce(leftDir * moveSpeed * 3);
+        rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
     }
 
     public void rideRight()
     {
         Vector2 rightDir = transform.right; // local -X yönü
-        rb.AddForce(rightDir * moveSpeed *3);
+        rb.AddForce(rightDir * moveSpeed * 3);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
     }
     // --- Fly Sistemi ---
@@ -140,7 +148,7 @@ public class Controller : MonoBehaviour
     {
         Debug.Log("as");
         Vector2 upDir = transform.up;
-        rb.velocity = upDir * flySpeed;
+        rb.velocity += upDir * flySpeed * Time.deltaTime;
     }
 
     void StopFly()
@@ -167,18 +175,19 @@ public class Controller : MonoBehaviour
     public float projectileSpeed;
     public GameObject firstAmmo;
     public GameObject secondAmmo;
+    public float magnetRange = 5f;
     public GameObject thirdAmmo;
     public bool canShoot;
 
-    void shoot(GameObject myGun)
+    void shoot()
     {
         GameObject newAmmo = Instantiate(ammo);
-        newAmmo.transform.position = myGun.transform.position;
-        newAmmo.transform.rotation = myGun.transform.localRotation;
-        newAmmo.GetComponent<Rigidbody2D>().velocity = myGun.transform.right * projectileSpeed;
+        newAmmo.transform.position = gun.transform.position;
+        newAmmo.transform.rotation = gun.transform.localRotation;
+        newAmmo.GetComponent<Rigidbody2D>().velocity = gun.transform.right * projectileSpeed;
         Debug.Log(newAmmo.GetComponent<Rigidbody2D>().velocity);
-        if(firstAmmo == null) firstAmmo = newAmmo;
-        else if(secondAmmo == null) secondAmmo = newAmmo;
+        if (firstAmmo == null) firstAmmo = newAmmo;
+        else if (secondAmmo == null) secondAmmo = newAmmo;
         else if (thirdAmmo == null) thirdAmmo = newAmmo;
         else
         {
@@ -187,5 +196,58 @@ public class Controller : MonoBehaviour
             secondAmmo = thirdAmmo;
             thirdAmmo = newAmmo;
         }
+    }
+
+    public Vector2 boxSize = new Vector2(5f, 3f); // geniþlik, yükseklik
+    public float forceAmount = 10f;               // kuvvet büyüklüðü 
+    public Transform pullPoint;          // objeleri toplayacaðýn nokta (örneðin karakterin önü)
+    public float magnetForce = 10f;
+    public float holdPullForce = 20f; // hold objesine çekilme gücü
+    private Transform holdTarget; // yapýþtýðýmýz obje
+    private Vector3 holdOffset;
+
+
+    void PullObjects()
+    {
+        // Kutunun merkezini ileri taþý
+        Vector2 center = transform.position + transform.right * (boxSize.x / 2f);
+
+        // Kutu taramasý
+        Collider2D[] hits = Physics2D.OverlapBoxAll(center, boxSize, transform.eulerAngles.z);
+
+        foreach (var hit in hits)
+        {
+            if (hit.attachedRigidbody == null) continue;
+
+            // PULL
+            if (hit.CompareTag("pull"))
+            {
+                Vector2 dir = (transform.position - hit.transform.position).normalized;
+                hit.attachedRigidbody.AddForce(dir * magnetForce);
+            }
+
+            // PUSH
+            else if (hit.CompareTag("push"))
+            {
+                Vector2 dir = (hit.transform.position - transform.position).normalized;
+                hit.attachedRigidbody.AddForce(dir * magnetForce);
+            }
+
+            else if (hit.CompareTag("hold"))
+            {
+                holdTarget = hit.transform;
+                Vector2 dir = (holdTarget.position - transform.position).normalized;
+                rb.AddForce(dir * holdPullForce);
+            }
+        }
+    }
+
+
+    void OnDrawGizmosSelected()
+    {
+        Gizmos.color = Color.cyan;
+        Vector2 center = (Vector2)transform.position + (Vector2)transform.right * magnetRange * 0.5f;
+        Gizmos.matrix = Matrix4x4.TRS(center, Quaternion.Euler(0, 0, transform.eulerAngles.z), Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, boxSize);
     }
 }

@@ -169,8 +169,8 @@ public class BoardManager : MonoBehaviour
     {
         activeItems.Remove(_item.name[..^7]);
         Debug.Log(_item.name[..^7]);
-        if (_item.name[..^7] == "Car") { Destroy(_item); controller.canCarMove = false; } 
-        if (_item.name[..^7] == "Gun") controller.canShoot = false; 
+        if (_item.name[..^7] == "Car") { Destroy(_item); controller.canCarMove = false; }
+        if (_item.name[..^7] == "Gun") { Destroy(_item);  controller.canShoot = false;} 
         
     }
 
