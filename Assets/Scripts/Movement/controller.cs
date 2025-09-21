@@ -79,16 +79,11 @@ public class Controller : MonoBehaviour
             holdTarget = null;
         }
 
-        // Cooldown sayacý
-        if (true)
+        if (IsGrounded()) { canFly = true; flyTimer = flyDuration; }
+        if (canCarMove)
         {
-                // Yere deðerse canFly resetlenir
-                if (IsGrounded())
-                    canFly = true;
-            if (canCarMove)
-            {
-                if (isGrounded) canFly = true;
-            }
+            if (isGrounded) canFly = true;
+            flyTimer = flyDuration;
         }
     }
 
@@ -151,7 +146,7 @@ public class Controller : MonoBehaviour
                 flyTimer = flyDuration; // uçuþ süresini baþlat
             }
 
-            if (flyTimer > 0f)
+            if (isFlying && flyTimer > 0f)
             {
                 Fly();
                 flyTimer -= Time.deltaTime;
