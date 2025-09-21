@@ -9,4 +9,6 @@ public class itemHandler : MonoBehaviour
 
     public GameObject carG1;
     public GameObject carG2;
+    public GameObject gunF1;
+    public GameObject magnetH1;
 }

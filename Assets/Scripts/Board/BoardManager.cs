@@ -157,13 +157,17 @@ public class BoardManager : MonoBehaviour
 
         if (myItem.name == "Car") handleCar(newObj);
         if (myItem.name == "Gun") handleGun(newObj);
+        if (myItem.name == "Magnet") handleMagnet(newObj);
+        if (myItem.name == "Heli") handleHeli(newObj);
 
     }
 
     void handleGun(GameObject obj)
     {
         controller.canShoot = true;
+        controller.firePoint = obj.GetComponent<itemHandler>().gunF1.transform;
         controller.gun = obj;
+        
     }
     void removeItem(GameObject _item)
     {
@@ -171,6 +175,8 @@ public class BoardManager : MonoBehaviour
         Debug.Log(_item.name[..^7]);
         if (_item.name[..^7] == "Car") { Destroy(_item); controller.canCarMove = false; }
         if (_item.name[..^7] == "Gun") { Destroy(_item);  controller.canShoot = false;} 
+        if (_item.name[..^7] == "Magnet") { Destroy(_item);  controller.canMagnet = false;} 
+        if (_item.name[..^7] == "Heli") { Destroy(_item);  controller.hasHeli = false;} 
         
     }
 
@@ -185,12 +191,21 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    void handleMagnet(GameObject magnet)
+    {
+        controller.magnetHead = magnet.GetComponent<itemHandler>().magnetH1;
+        controller.canMagnet = true;
+    }
+
     void handleCar(GameObject car)
     {
-        Debug.Log("test");
         controller.carGroundCheck1 = car.GetComponent<itemHandler>().carG1.transform;
         controller.carGroundCheck2 = car.GetComponent<itemHandler>().carG2.transform;
         controller.canCarMove = true;
+    }
+    void handleHeli(GameObject Heli)
+    {
+        controller.hasHeli = true;
     }
 
     public void choseSlot(string _slot)
@@ -239,6 +254,21 @@ public class BoardManager : MonoBehaviour
     {
         Vector3 startScale = Vector3.zero;
         Vector3 targetScale = Vector3.one;
+        switch (obj.name[..^7])
+        {
+            case "Gun":
+                targetScale = Vector3.one * 0.5f;
+                break;
+            case "Magnet":
+                targetScale = Vector3.one * 0.5f;
+                break;
+            case "Car":
+                targetScale = Vector3.one * 1f;
+                break;
+            case "Heli":
+                targetScale = Vector3.one;
+                break;
+        }
         float t = 0f;
 
         while (t < duration)

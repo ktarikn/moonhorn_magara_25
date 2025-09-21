@@ -69,7 +69,7 @@ public class Controller : MonoBehaviour
         }
         if (Input.GetMouseButton(1)) // mýknatýs aktif
         {
-            PullObjects();
+            if(canMagnet) PullObjects();
         }
         else
         {
@@ -117,13 +117,14 @@ public class Controller : MonoBehaviour
     public float flyDuration = 1.5f;   // max uçuþ süresi
     public float flyCooldown = 2.5f;   // tekrar uçabilmek için bekleme
 
+    public bool hasHeli = false;
     private bool isFlying = false;
     public bool canFly = true;
     private float flyTimer = 0f;
     private float cooldownTimer = 0f;
     void TryFly()
     {
-        if (canFly)
+        if (canFly && hasHeli)
         {
             if (!isFlying)
             {
@@ -171,21 +172,28 @@ public class Controller : MonoBehaviour
         }
     }
 
-    public GameObject ammo;
-    public float projectileSpeed;
+    public GameObject bulletPrefab;
+    public float shootForce;
     public GameObject firstAmmo;
     public GameObject secondAmmo;
-    public float magnetRange = 5f;
+    
     public GameObject thirdAmmo;
     public bool canShoot;
-
+    public Transform firePoint;     // merminin çýkacaðý nokta
     void shoot()
     {
-        GameObject newAmmo = Instantiate(ammo);
-        newAmmo.transform.position = gun.transform.position;
-        newAmmo.transform.rotation = gun.transform.localRotation;
-        newAmmo.GetComponent<Rigidbody2D>().velocity = gun.transform.right * projectileSpeed;
-        Debug.Log(newAmmo.GetComponent<Rigidbody2D>().velocity);
+
+        GameObject newAmmo = Instantiate(bulletPrefab, firePoint.position, Quaternion.identity);
+
+        // Mermiye Rigidbody2D ekleyip kuvvet uygula
+        Rigidbody2D a_rb = newAmmo.GetComponent<Rigidbody2D>();
+        if (rb != null)
+        {
+            a_rb.gravityScale = 1f; // yerçekimi etkisi
+            a_rb.velocity = gun.transform.right * shootForce; // karakterin sað yönü
+        }
+
+
         if (firstAmmo == null) firstAmmo = newAmmo;
         else if (secondAmmo == null) secondAmmo = newAmmo;
         else if (thirdAmmo == null) thirdAmmo = newAmmo;
@@ -197,7 +205,7 @@ public class Controller : MonoBehaviour
             thirdAmmo = newAmmo;
         }
     }
-
+    public float magnetRange = 5f;
     public Vector2 boxSize = new Vector2(5f, 3f); // geniþlik, yükseklik
     public float forceAmount = 10f;               // kuvvet büyüklüðü 
     public Transform pullPoint;          // objeleri toplayacaðýn nokta (örneðin karakterin önü)
@@ -205,15 +213,15 @@ public class Controller : MonoBehaviour
     public float holdPullForce = 20f; // hold objesine çekilme gücü
     private Transform holdTarget; // yapýþtýðýmýz obje
     private Vector3 holdOffset;
-
-
+    public bool canMagnet = false;
+    public GameObject magnetHead;
     void PullObjects()
     {
         // Kutunun merkezini ileri taþý
         Vector2 center = transform.position + transform.right * (boxSize.x / 2f);
 
         // Kutu taramasý
-        Collider2D[] hits = Physics2D.OverlapBoxAll(center, boxSize, transform.eulerAngles.z);
+        Collider2D[] hits = Physics2D.OverlapBoxAll(magnetHead.transform.position, boxSize, magnetHead.transform.eulerAngles.z);
 
         foreach (var hit in hits)
         {
@@ -222,32 +230,44 @@ public class Controller : MonoBehaviour
             // PULL
             if (hit.CompareTag("pull"))
             {
-                Vector2 dir = (transform.position - hit.transform.position).normalized;
+                Vector2 dir = (magnetHead.transform.position - hit.transform.position).normalized;
                 hit.attachedRigidbody.AddForce(dir * magnetForce);
             }
 
             // PUSH
             else if (hit.CompareTag("push"))
             {
-                Vector2 dir = (hit.transform.position - transform.position).normalized;
+                Vector2 dir = (hit.transform.position - magnetHead.transform.position).normalized;
                 hit.attachedRigidbody.AddForce(dir * magnetForce);
             }
 
             else if (hit.CompareTag("hold"))
             {
                 holdTarget = hit.transform;
-                Vector2 dir = (holdTarget.position - transform.position).normalized;
+                Vector2 dir = (holdTarget.position - magnetHead.transform.position).normalized;
                 rb.AddForce(dir * holdPullForce);
             }
         }
     }
 
 
-    void OnDrawGizmosSelected()
+    void OnDrawGizmos()
     {
+        if (magnetHead == null) return;
+
+        // Gizmo rengi
         Gizmos.color = Color.cyan;
-        Vector2 center = (Vector2)transform.position + (Vector2)transform.right * magnetRange * 0.5f;
-        Gizmos.matrix = Matrix4x4.TRS(center, Quaternion.Euler(0, 0, transform.eulerAngles.z), Vector3.one);
-        Gizmos.DrawWireCube(Vector3.zero, boxSize);
+
+        // OverlapBox pozisyonu ve boyutu
+        Vector2 pos = magnetHead.transform.position;
+        Vector2 size = boxSize;
+        float angle = magnetHead.transform.eulerAngles.z;
+
+        // Unity 2D için Rotate ve DrawWireCube kombinasyonu
+        Gizmos.matrix = Matrix4x4.TRS(pos, Quaternion.Euler(0, 0, angle), Vector3.one);
+        Gizmos.DrawWireCube(Vector3.zero, size);
+
+        // Matrisi sýfýrla ki baþka çizimler etkilenmesin
+        Gizmos.matrix = Matrix4x4.identity;
     }
 }
