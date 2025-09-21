@@ -7,7 +7,6 @@ TagManager:
   - Collectible
   - Boundry
   - push
-  - Boss
   layers:
   - Default
   - TransparentFX

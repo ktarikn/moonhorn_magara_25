@@ -25,11 +25,9 @@ public class MusicManager : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-
         if (!source.isPlaying)
         {
-            currentState = nextState;
-            source.clip = audios[currentState];
+            source.clip = audios[nextState];
             source.Play();
         }
     }
