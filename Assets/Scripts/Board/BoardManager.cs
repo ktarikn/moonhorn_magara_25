@@ -57,6 +57,7 @@ public class BoardManager : MonoBehaviour
     void InteractWithBoard()
     {
         board.SetActive(!isActive);
+        if(controller.gun) controller.canShoot = isActive;
         carB.SetActive(carPicked);
         magnetB.SetActive(magnetPicked);
         heliB.SetActive(heliPicked);
