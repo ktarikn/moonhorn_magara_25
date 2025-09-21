@@ -545,6 +545,12 @@ PlayableDirector:
     value: {fileID: 0}
   - key: {fileID: -8926922780154106256, guid: 7d13604cebb07564f9de5b87e98ac6b1, type: 2}
     value: {fileID: 775343918}
+  - key: {fileID: -6336794950074447348, guid: 3e97d8b7e061a524ea57453293e1587f, type: 2}
+    value: {fileID: 1665093742}
+  - key: {fileID: -2712883299537059291, guid: 3e97d8b7e061a524ea57453293e1587f, type: 2}
+    value: {fileID: 435489022}
+  - key: {fileID: -8926922780154106256, guid: 3e97d8b7e061a524ea57453293e1587f, type: 2}
+    value: {fileID: 775343918}
   m_ExposedReferences:
     m_References: []
 --- !u!114 &648709653
@@ -1008,7 +1014,7 @@ MonoBehaviour:
   m_fontMaterials: []
   m_fontColor32:
     serializedVersion: 2
-    rgba: 16777215
+    rgba: 687865855
   m_fontColor: {r: 1, g: 1, b: 1, a: 0}
   m_enableVertexGradient: 0
   m_colorMode: 3
