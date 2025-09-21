@@ -2068,6 +2068,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 9ef370ca053c44445b4289ce3f6d2d5e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+  boardManager: {fileID: 0}
   rollSpeed: 148.5
   maxAngularSpeed: 300
   moveSpeed: 18.5
@@ -2238,12 +2239,12 @@ Transform:
   m_GameObject: {fileID: 586909469}
   serializedVersion: 2
   m_LocalRotation: {x: -0, y: -0, z: 0.70377, w: 0.71042794}
-  m_LocalPosition: {x: -3.9781923, y: -1.8982087, z: 0}
+  m_LocalPosition: {x: 0.7518034, y: 1.4110066, z: -0.049597155}
   m_LocalScale: {x: 0.24000001, y: 0.24000001, z: 0.24000001}
   m_ConstrainProportionsScale: 1
   m_Children:
   - {fileID: 1958358658}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2068103557}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 89.461}
 --- !u!1 &606198122
 GameObject:
@@ -2541,6 +2542,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxItems: 2
+  carPicked: 0
+  gunPicked: 0
+  heliPicked: 0
+  magnetPicked: 0
   board: {fileID: 1152027847}
   controller: {fileID: 586909470}
   ButtonName: 
@@ -2554,6 +2559,10 @@ MonoBehaviour:
   downItem: {fileID: 0}
   chosenItem: {fileID: 0}
   chosenSlot: 
+  carB: {fileID: 0}
+  gunB: {fileID: 0}
+  magnetB: {fileID: 0}
+  heliB: {fileID: 0}
   tick1: {fileID: 1968493522}
   tick2: {fileID: 1003359596}
   battery:
@@ -2580,12 +2589,12 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 731160861}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: 852.47845, y: 657.25116, z: -5.794112}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 857.20844, y: 660.56036, z: -5.8437095}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children: []
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2068103557}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1001 &742735782
 PrefabInstance:
@@ -6642,14 +6651,14 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1981553089}
   serializedVersion: 2
-  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
-  m_LocalPosition: {x: -4.7299957, y: -3.3092153, z: 0.049597155}
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: 0, y: 0, z: 0}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 1188346982}
   - {fileID: 1689313975}
-  m_Father: {fileID: 0}
+  m_Father: {fileID: 2068103557}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2036523962
 GameObject:
@@ -6998,6 +7007,40 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2058490177}
   m_CullTransparentMesh: 1
+--- !u!1 &2068103556
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 2068103557}
+  m_Layer: 0
+  m_Name: papa
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &2068103557
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2068103556}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: -4.7299957, y: -3.3092153, z: 0.049597155}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children:
+  - {fileID: 586909474}
+  - {fileID: 731160863}
+  - {fileID: 1981553090}
+  m_Father: {fileID: 0}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2072125724
 GameObject:
   m_ObjectHideFlags: 0
@@ -7683,9 +7726,7 @@ PrefabInstance:
 SceneRoots:
   m_ObjectHideFlags: 0
   m_Roots:
-  - {fileID: 586909474}
-  - {fileID: 731160863}
   - {fileID: 574598177}
   - {fileID: 175108812}
-  - {fileID: 1981553090}
+  - {fileID: 2068103557}
   - {fileID: 742735782}

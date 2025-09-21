@@ -54,19 +54,20 @@ public class Interact : MonoBehaviour
 
             case CollectibleType.Wheel:
                 // WheelPart objesi atanmýþsa onu aktif et
-                if (wheelPart != null) wheelPart.SetActive(true);
+                transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().carPicked = true;
+                Debug.Log("test");
                 break;
 
             case CollectibleType.Magnet:
-                if (magnetPart != null) magnetPart.SetActive(true);
+                transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().magnetPicked = true;
                 break;
 
             case CollectibleType.Weapon:
-                if (weaponPart != null) weaponPart.SetActive(true);
+                transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().gunPicked  = true;
                 break;
 
             case CollectibleType.Drone:
-                if (dronePart != null) dronePart.SetActive(true);
+                transform.gameObject.GetComponent<Controller>().boardManager.GetComponent<BoardManager>().heliPicked = true;
                 break;
         }
 
