@@ -2,10 +2,13 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BossMissle : MonoBehaviour
+public class BossCannon : MonoBehaviour
 {
     // Start is called before the first frame update
     private Transform player;
+    
+    public GameObject rocketPrefab;
+    public Vector2 muzzle { get { return transform.GetChild(0).position; } set { } }
     private bool lockedOn = false;
     public float maxDistance = 10f;
     public LayerMask hitLayers = Physics2D.DefaultRaycastLayers;
@@ -63,8 +66,9 @@ public class BossMissle : MonoBehaviour
 
             // --- 1 second on then fire rocket ---
             //yield return StartCoroutine(FireLaser(2f, 2f));
-            yield return Locked(2f,1f);
+            yield return StartCoroutine(Locked(2f,0f));
             FireRocket();
+
         }
     }
 
@@ -72,13 +76,13 @@ public class BossMissle : MonoBehaviour
     {
         // Laser ON
         
-        UpdateLaser();
+        
         lr.enabled = true;
         lockedOn = true;
         float timer = 0f;
         while (timer < onTime)
         {
-            
+            UpdateLaser();
             timer += Time.deltaTime;
             yield return null;
         }
@@ -114,7 +118,7 @@ public class BossMissle : MonoBehaviour
 
         lr.enabled = true;
 
-        Vector2 origin = transform.GetChild(0).position;
+        Vector2 origin = muzzle;
         
         Vector2 direction = transform.right; // or transform.up if sprite points up
         RaycastHit2D hit = Physics2D.Raycast(origin, direction, maxDistance);
@@ -123,7 +127,7 @@ public class BossMissle : MonoBehaviour
 
         if (hit.collider != null)
         {
-            Debug.Log(hit.ToString());
+            
             lr.SetPosition(1, hit.point);
         }
         else
@@ -135,7 +139,9 @@ public class BossMissle : MonoBehaviour
     void FireRocket()
     {
         lr.enabled = true;
-        return;
+        if(rocketPrefab)
+            Instantiate(rocketPrefab, muzzle, transform.rotation);
+        
     }
 
 
@@ -152,28 +158,5 @@ public class BossMissle : MonoBehaviour
 
     }
 
-    void LaserSeek()
-    {
-        Vector2 origin = transform.GetChild(0).position;
-        Vector2 direction = transform.right;
-        Debug.Log(transform.GetChild(0).name);
-        lr.startColor = Color.red;
-        lr.endColor = Color.red;
-        // Cast a ray from the object in its facing direction
-        RaycastHit2D hit = Physics2D.Raycast(transform.position, direction, maxDistance);
-        // Start point always at origin
-        lr.SetPosition(0, origin);
-
-        if (hit.collider != null)
-        {
-            // End point at collision
-            lr.SetPosition(1, hit.point);
-        }
-        else
-        {
-            // End point at max distance
-            lr.SetPosition(1, origin + direction * maxDistance);
-        }
-        Debug.Log("should've drawn");
-    }
+    
 }
