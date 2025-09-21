@@ -4,11 +4,12 @@ using System.Collections.Generic;
 using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.Rendering.VirtualTexturing;
+using UnityEngine.UI;
 using static UnityEditor.Progress;
 
 public class BoardManager : MonoBehaviour
 {
-    public int maxItems = 2 ;
+    public int maxItems = 2;
 
     //General
     public GameObject board;
@@ -16,7 +17,7 @@ public class BoardManager : MonoBehaviour
     public Controller controller;
 
     //Right Part
-    public Action currentAction = null; 
+    public Action currentAction = null;
     public string ButtonName = null;
 
 
@@ -39,7 +40,8 @@ public class BoardManager : MonoBehaviour
     }
     void Update()
     {
-        if (Input.GetKeyDown(KeyCode.Tab)) {
+        if (Input.GetKeyDown(KeyCode.Tab))
+        {
             InteractWithBoard();
         }
     }
@@ -54,7 +56,7 @@ public class BoardManager : MonoBehaviour
     {
         switch (ButtonName)
         {
-            case "A": 
+            case "A":
                 controller.keyAAction = currentAction;
                 break;
             case "W":
@@ -73,7 +75,7 @@ public class BoardManager : MonoBehaviour
 
     public void choseCurrentAction(string Action)
     {
-        switch(Action)
+        switch (Action)
         {
             case "RollRight":
                 currentAction = controller.RollRight;
@@ -120,6 +122,7 @@ public class BoardManager : MonoBehaviour
             newObj.transform.localRotation = newRotation;
             if (Itemcount() > maxItems)
             {
+                StopAllCoroutines();
                 Destroy(upItem);
                 return;
             }
@@ -132,19 +135,19 @@ public class BoardManager : MonoBehaviour
             downItem = newObj;
             newObj.transform.localPosition = newCord;
             newObj.transform.localRotation = newRotation;
-            if (Itemcount() > maxItems) { Destroy(downItem); return; }
+            if (Itemcount() > maxItems) { StopAllCoroutines(); Destroy(downItem); return; }
         }
-        if (slot == "right") 
-        { 
-            if(rightItem != null) removeItem(rightItem);
+        if (slot == "right")
+        {
+            if (rightItem != null) removeItem(rightItem);
             newCord.x = myItem.GetComponent<itemHandler>().distance;
             newRotation = Quaternion.Euler(0, 0, myItem.GetComponent<itemHandler>().startRotation - 270);
             rightItem = newObj;
             newObj.transform.localPosition = newCord;
             newObj.transform.localRotation = newRotation;
-            if (Itemcount() > maxItems) { Destroy(rightItem); return; }
+            if (Itemcount() > maxItems) { StopAllCoroutines(); Destroy(rightItem); return; }
         }
-        if(slot == "left") 
+        if (slot == "left")
         {
             if (leftItem != null) removeItem(leftItem);
             newCord.x = -myItem.GetComponent<itemHandler>().distance;
@@ -152,13 +155,14 @@ public class BoardManager : MonoBehaviour
             leftItem = newObj;
             newObj.transform.localPosition = newCord;
             newObj.transform.localRotation = newRotation;
-            if (Itemcount() > maxItems) { Destroy(leftItem); return; }
+            if (Itemcount() > maxItems) { StopAllCoroutines(); Destroy(leftItem); return; }
         }
 
         if (myItem.name == "Car") handleCar(newObj);
         if (myItem.name == "Gun") handleGun(newObj);
         if (myItem.name == "Magnet") handleMagnet(newObj);
         if (myItem.name == "Heli") handleHeli(newObj);
+        
 
     }
 
@@ -167,17 +171,18 @@ public class BoardManager : MonoBehaviour
         controller.canShoot = true;
         controller.firePoint = obj.GetComponent<itemHandler>().gunF1.transform;
         controller.gun = obj;
-        
+
     }
     void removeItem(GameObject _item)
     {
         activeItems.Remove(_item.name[..^7]);
         Debug.Log(_item.name[..^7]);
         if (_item.name[..^7] == "Car") { Destroy(_item); controller.canCarMove = false; }
-        if (_item.name[..^7] == "Gun") { Destroy(_item);  controller.canShoot = false;} 
-        if (_item.name[..^7] == "Magnet") { Destroy(_item);  controller.canMagnet = false;} 
-        if (_item.name[..^7] == "Heli") { Destroy(_item);  controller.hasHeli = false;} 
+        if (_item.name[..^7] == "Gun") { Destroy(_item); controller.canShoot = false; }
+        if (_item.name[..^7] == "Magnet") { Destroy(_item); controller.canMagnet = false; }
+        if (_item.name[..^7] == "Heli") { Destroy(_item); controller.hasHeli = false; }
         
+
     }
 
     public void choseItem(GameObject _item)
@@ -210,7 +215,7 @@ public class BoardManager : MonoBehaviour
 
     public void choseSlot(string _slot)
     {
-        if(chosenSlot == _slot)
+        if (chosenSlot == _slot)
         {
             switch (chosenSlot)
             {
@@ -239,14 +244,43 @@ public class BoardManager : MonoBehaviour
         }
     }
 
+    public GameObject tick1;
+    public GameObject tick2;
+    public GameObject[] battery;
 
     public int Itemcount()
     {
         int count = 0;
-        if(leftItem != null) count++;
-        if(rightItem != null) count++;
-        if(upItem != null) count++;
-        if(downItem != null) count++;
+        if (leftItem != null) count++;
+        if (rightItem != null) count++;
+        if (upItem != null) count++;
+        if (downItem != null) count++;
+        tick1.SetActive(false);
+        tick2.SetActive(false);
+        switch (count)
+        {
+            case 0:
+                foreach (GameObject item in battery)
+                {
+                    item.GetComponent<Image>().color = Color.white;
+                }
+                break;
+            case 1:
+                tick1.SetActive(true);
+                foreach (GameObject item in battery)
+                {
+                    item.GetComponent<Image>().color = Color.yellow;
+                }
+                break;
+            case 2:
+                tick2.SetActive(true);
+                tick1.SetActive(true);
+                foreach (GameObject item in battery)
+                {
+                    item.GetComponent<Image>().color = Color.red;
+                }
+                break;
+        }
         return count;
     }
 
@@ -281,4 +315,99 @@ public class BoardManager : MonoBehaviour
         obj.transform.localScale = targetScale;
     }
 
+
+    public GameObject carImg;
+    public GameObject heliImg;
+    public GameObject gunImg;
+    public GameObject magnetImg;
+
+
+    public GameObject leftImage;
+    public GameObject rightImage;
+    public GameObject topImage;
+    public GameObject downImage;
+    void updateSlots()
+    {
+        Destroy(leftImage);
+        Destroy(rightImage);
+        Destroy(topImage);
+        Destroy(downImage);
+        if (leftItem != null)
+        {
+            switch (leftItem.name[..^7])
+            {
+                case "Car":
+                    leftImage = Instantiate(carImg, leftSlot.transform);
+                    break;
+                case "Magnet":
+                    leftImage = Instantiate(magnetImg, leftSlot.transform);
+                    break;
+                case "Heli":
+                    leftImage = Instantiate(heliImg, leftSlot.transform);
+                    break;
+                case "Gun":
+                    leftImage = Instantiate(gunImg, leftSlot.transform);
+                    break;
+            }
+            leftImage.transform.rotation = new Quaternion(0, 0, 90, 0);
+        }
+        if (rightItem != null)
+        {
+            switch (rightItem.name[..^7])
+            {
+                case "Car":
+                    rightImage = Instantiate(carImg, rightSlot.transform);
+                    break;
+                case "Magnet":
+                    rightImage = Instantiate(magnetImg, rightSlot.transform);
+                    break;
+                case "Heli":
+                    rightImage = Instantiate(heliImg, rightSlot.transform);
+                    break;
+                case "Gun":
+                    rightImage = Instantiate(gunImg, rightSlot.transform);
+                    break;
+            }
+            rightImage.transform.rotation = new Quaternion(0, 0, -90, 0);
+        }
+        if (upItem != null)
+        {
+
+            switch (upItem.name[..^7])
+            {
+                case "Car":
+                    topImage = Instantiate(carImg, upSlot.transform);
+                    break;
+                case "Magnet":
+                    topImage = Instantiate(magnetImg, upSlot.transform);
+                    break;
+                case "Heli":
+                    topImage = Instantiate(heliImg, upSlot.transform);
+                    break;
+                case "Gun":
+                    topImage = Instantiate(gunImg, upSlot.transform);
+                    break;
+            }
+            topImage.transform.rotation = new Quaternion(0, 0, 180, 0);
+        }
+        if (downItem != null)
+        {
+            switch (downItem.name[..^7])
+            {
+                case "Car":
+                    downImage = Instantiate(carImg, downSlot.transform);
+                    break;
+                case "Magnet":
+                    downImage = Instantiate(magnetImg, downSlot.transform);
+                    break;
+                case "Heli":
+                    downImage = Instantiate(heliImg, downSlot.transform);
+                    break;
+                case "Gun":
+                    downImage = Instantiate(gunImg, downSlot.transform);
+                    break;
+            }
+            downImage.transform.rotation = new Quaternion(0, 0, 0, 0);
+        }
+    }
 }

@@ -99,11 +99,12 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 46bb12939cf314f48a98b36da48f3e28, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  distance: 4.95
+  distance: 3.7
   startRotation: 270
   carG1: {fileID: 0}
   carG2: {fileID: 0}
   gunF1: {fileID: 5189804578071999564}
+  magnetH1: {fileID: 0}
 --- !u!61 &8800714482980511035
 BoxCollider2D:
   m_ObjectHideFlags: 0

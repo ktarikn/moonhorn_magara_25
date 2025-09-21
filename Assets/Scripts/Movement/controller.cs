@@ -76,6 +76,14 @@ public class Controller : MonoBehaviour
             // Magnet býrakýlýnca Hold objesinden ayrýl
             holdTarget = null;
         }
+
+        // Cooldown sayacý
+        if (!canFly)
+        {
+                // Yere deðerse canFly resetlenir
+                if (IsGrounded())
+                    canFly = true;
+        }
     }
 
     void FixedUpdate()
@@ -121,16 +129,20 @@ public class Controller : MonoBehaviour
     private bool isFlying = false;
     public bool canFly = true;
     private float flyTimer = 0f;
-    private float cooldownTimer = 0f;
+    private float cooldownTimer = 1f;
+    public float groundCheckDistance = 0.1f; // raycast mesafesi
+
+    public Vector2 groundCheckSize = new Vector2(0.5f, 0.1f); // kutu boyutu
+    public Transform groundCheckPoint;    // kutunun merkezi (genellikle karakterin altý)
+
     void TryFly()
     {
         if (canFly && hasHeli)
         {
             if (!isFlying)
             {
-                Debug.Log("sa");
                 isFlying = true;
-                flyTimer = flyDuration;
+                flyTimer = flyDuration; // uçuþ süresini baþlat
             }
 
             if (flyTimer > 0f)
@@ -147,9 +159,14 @@ public class Controller : MonoBehaviour
 
     void Fly()
     {
-        Debug.Log("as");
         Vector2 upDir = transform.up;
         rb.velocity += upDir * flySpeed * Time.deltaTime;
+    }
+
+    bool IsGrounded()
+    {
+        Collider2D hit = Physics2D.OverlapBox(groundCheckPoint.position, groundCheckSize, transform.eulerAngles.z, groundLayer);
+        return hit != null;
     }
 
     void StopFly()
@@ -159,16 +176,15 @@ public class Controller : MonoBehaviour
         cooldownTimer = flyCooldown;
     }
 
-    void LateUpdate()
+    // --- Ground check kutusunu görselleþtirme ---
+    void OnDrawGizmosSelected()
     {
-        // Cooldown sayacý
-        if (!canFly)
+        if (groundCheckPoint != null)
         {
-            cooldownTimer -= Time.deltaTime;
-            if (cooldownTimer <= 0f)
-            {
-                canFly = true;
-            }
+            Gizmos.color = Color.red;
+            Gizmos.matrix = Matrix4x4.TRS(groundCheckPoint.position, Quaternion.Euler(0, 0, transform.eulerAngles.z), Vector3.one);
+            Gizmos.DrawWireCube(Vector3.zero, groundCheckSize);
+            Gizmos.matrix = Matrix4x4.identity;
         }
     }
 
