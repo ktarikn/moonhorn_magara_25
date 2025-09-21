@@ -27,7 +27,7 @@ Transform:
   serializedVersion: 2
   m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 3.3804002, y: 3.27, z: 0}
-  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_LocalScale: {x: 1, y: 1.25, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
   - {fileID: 7081963249459055671}
@@ -97,6 +97,7 @@ GameObject:
   - component: {fileID: 6338744025643549692}
   - component: {fileID: 5870052865212801687}
   - component: {fileID: 659952797293281192}
+  - component: {fileID: 5549872628813313094}
   m_Layer: 0
   m_Name: laser line
   m_TagString: Untagged
@@ -284,6 +285,18 @@ MonoBehaviour:
   lineRenderer: {fileID: 6338744025643549692}
   boxCollider: {fileID: 5870052865212801687}
   particle: {fileID: 8524251389685251197}
+--- !u!114 &5549872628813313094
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 8066387494843248865}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: ecf6665fb2698d4488209348d0a5a1bb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
 --- !u!1 &8524251389685251197
 GameObject:
   m_ObjectHideFlags: 0
