@@ -11,11 +11,6 @@ public class BoardManager : MonoBehaviour
 {
     public int maxItems = 2;
 
-    public bool carPicked = false;
-    public bool gunPicked = false;
-    public bool heliPicked = false;
-    public bool magnetPicked = false;
-
     //General
     public GameObject board;
     private bool isActive;
@@ -50,17 +45,10 @@ public class BoardManager : MonoBehaviour
             InteractWithBoard();
         }
     }
-    public GameObject carB;
-    public GameObject gunB;
-    public GameObject magnetB;
-    public GameObject heliB;
+
     void InteractWithBoard()
     {
         board.SetActive(!isActive);
-        carB.SetActive(carPicked);
-        magnetB.SetActive(magnetPicked);
-        heliB.SetActive(heliPicked);
-        gunB.SetActive(gunPicked);
         isActive = !isActive;
     }
 
@@ -193,7 +181,7 @@ public class BoardManager : MonoBehaviour
         if (_item.name[..^7] == "Gun") { Destroy(_item); controller.canShoot = false; }
         if (_item.name[..^7] == "Magnet") { Destroy(_item); controller.canMagnet = false; }
         if (_item.name[..^7] == "Heli") { Destroy(_item); controller.hasHeli = false; }
-        Itemcount();
+        
 
     }
 
@@ -263,7 +251,11 @@ public class BoardManager : MonoBehaviour
 
     public int Itemcount()
     {
-        int count = activeItems.Count;
+        int count = 0;
+        if (leftItem != null) count++;
+        if (rightItem != null) count++;
+        if (upItem != null) count++;
+        if (downItem != null) count++;
         tick1.SetActive(false);
         tick2.SetActive(false);
         switch (count)
@@ -282,14 +274,6 @@ public class BoardManager : MonoBehaviour
                 }
                 break;
             case 2:
-                tick2.SetActive(true);
-                tick1.SetActive(true);
-                foreach (GameObject item in battery)
-                {
-                    item.GetComponent<Image>().color = Color.red;
-                }
-                break;
-            case 3:
                 tick2.SetActive(true);
                 tick1.SetActive(true);
                 foreach (GameObject item in battery)

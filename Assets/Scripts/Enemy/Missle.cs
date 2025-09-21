@@ -35,8 +35,6 @@ public class Missle : MonoBehaviour
         transform.rotation = Quaternion.identity;
         rb.freezeRotation = true;
         rb.velocity = Vector2.zero;
-        gameObject.tag = "Untagged";
-        Destroy(rb);
         Destroy(gameObject, destroy_timer);
 
         
