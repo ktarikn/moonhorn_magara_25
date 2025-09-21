@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 [DisallowMultipleComponent]
 public class PlayerRespawn : MonoBehaviour
@@ -115,6 +116,16 @@ public class PlayerRespawn : MonoBehaviour
         if(health <=0)
         {
             //ölüm
+            health = 3;
+            // 5) renkleri geri döndür
+            foreach (var kv in originalColors)
+            {
+                if (kv.Key != null)
+                    kv.Key.color = kv.Value;
+            }
+
+            isTakingDamage = false;
+            SceneManager.LoadScene(SceneManager.GetActiveScene().buildIndex);
         }
 
         // 4) bekle (hasar görünümü)

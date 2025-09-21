@@ -83,6 +83,10 @@ public class Controller : MonoBehaviour
                 // Yere deðerse canFly resetlenir
                 if (IsGrounded())
                     canFly = true;
+            if (canCarMove)
+            {
+                if (isGrounded) canFly = true;
+            }
         }
     }
 

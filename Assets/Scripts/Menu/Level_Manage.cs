@@ -16,6 +16,7 @@ public class Level_Manage : MonoBehaviour
     public void Load_Next_Level()
     {
         // int currentLevel = SceneManager.GetActiveScene().buildIndex;
+        //SceneManager.LoadScene(currentLevel+1);
         SceneManager.LoadScene(level_index);
     }
 }

@@ -11,6 +11,11 @@ public class BoardManager : MonoBehaviour
 {
     public int maxItems = 2;
 
+    public bool carPicked = false;
+    public bool gunPicked = false;
+    public bool heliPicked = false;
+    public bool magnetPicked = false;
+
     //General
     public GameObject board;
     private bool isActive;
@@ -45,10 +50,17 @@ public class BoardManager : MonoBehaviour
             InteractWithBoard();
         }
     }
-
+    public GameObject carB;
+    public GameObject gunB;
+    public GameObject magnetB;
+    public GameObject heliB;
     void InteractWithBoard()
     {
         board.SetActive(!isActive);
+        carB.SetActive(carPicked);
+        magnetB.SetActive(magnetPicked);
+        heliB.SetActive(heliPicked);
+        gunB.SetActive(gunPicked);
         isActive = !isActive;
     }
 
