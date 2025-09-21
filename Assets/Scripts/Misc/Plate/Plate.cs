@@ -81,7 +81,7 @@ public class Plate : MonoBehaviour
             if (objectsOnPlate.Count == 0)
             {
                 doorToControl?.OpenDoor();
-                laserToControl?.DeactivateLaser();
+                //laserToControl?.DeactivateLaser();
             }
 
             objectsOnPlate.Add(rb);
@@ -99,7 +99,7 @@ public class Plate : MonoBehaviour
             if (objectsOnPlate.Count == 0)
             {
                 doorToControl?.CloseDoor();
-                laserToControl?.ActivateLaser();
+                //laserToControl?.ActivateLaser();
 
                 SetColor();
             }
