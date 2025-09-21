@@ -80,7 +80,7 @@ public class Controller : MonoBehaviour
         }
 
         // Cooldown sayacý
-        if (!canFly)
+        if (true)
         {
                 // Yere deðerse canFly resetlenir
                 if (IsGrounded())
