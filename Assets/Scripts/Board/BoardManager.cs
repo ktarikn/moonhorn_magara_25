@@ -211,6 +211,7 @@ public class BoardManager : MonoBehaviour
     void handleHeli(GameObject Heli)
     {
         controller.hasHeli = true;
+        controller.heli = Heli;
     }
 
     public void choseSlot(string _slot)

@@ -156,10 +156,10 @@ public class Controller : MonoBehaviour
             }
         }
     }
-
+    public GameObject heli;
     void Fly()
     {
-        Vector2 upDir = transform.up;
+        Vector2 upDir = heli.transform.up;
         rb.velocity += upDir * flySpeed * Time.deltaTime;
     }
 
