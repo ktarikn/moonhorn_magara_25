@@ -2937,7 +2937,7 @@ MonoBehaviour:
   boardManager: {fileID: 0}
   rollSpeed: 148.5
   maxAngularSpeed: 300
-  moveSpeed: 18.5
+  moveSpeed: 10.4
   canCarMove: 0
   carGroundCheck1: {fileID: 0}
   carGroundCheck2: {fileID: 0}
