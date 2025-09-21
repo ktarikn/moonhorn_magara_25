@@ -37,11 +37,23 @@ public class Controller : MonoBehaviour
         if (Input.GetKey(KeyCode.A))
         {
             if (isGrounded) rideLeft();
+            if ((!canCarMove && !IsGrounded()) || canCarMove && isGrounded)
+            {
+                Vector2 rightDir = Vector2.right; // local X yönü
+                rb.AddForce(rightDir * moveSpeed);
+                rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
+            }
         }
 
         else if (Input.GetKey(KeyCode.D))
         {
             if (isGrounded) rideRight();
+            if ((!canCarMove && !IsGrounded()) || canCarMove && isGrounded)
+            {
+                Vector2 leftDir = -Vector2.right; // local -X yönü
+                rb.AddForce(leftDir * moveSpeed );
+                rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
+            }
         }
         else if (rb.velocity.x != 0)
         {
@@ -109,14 +121,14 @@ public class Controller : MonoBehaviour
 
     public void rideLeft()
     {
-        Vector2 leftDir = -transform.right; // local -X yönü
+        Vector2 leftDir = -Vector2.right; // local -X yönü
         rb.AddForce(leftDir * moveSpeed * 3);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
     }
 
     public void rideRight()
     {
-        Vector2 rightDir = transform.right; // local -X yönü
+        Vector2 rightDir = Vector2.right; // local -X yönü
         rb.AddForce(rightDir * moveSpeed * 3);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
     }
