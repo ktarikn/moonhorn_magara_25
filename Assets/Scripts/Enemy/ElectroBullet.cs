@@ -32,7 +32,7 @@ public class ElectroBullet : MonoBehaviour
             GetComponent<SpriteRenderer>().sprite = null;
             Destroy(gameObject, 0.3f);
         }
-        if (collision.gameObject.CompareTag("Boundry"))
+        if (collision.gameObject.CompareTag("Obstacle"))
         {
             GetComponent<SpriteRenderer>().sprite = null;
             Destroy(gameObject, 0.3f);

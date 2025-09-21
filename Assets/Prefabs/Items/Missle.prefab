@@ -135,7 +135,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 97b6f99be6546a34b8197710ad93193e, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  speed: 5
+  speed: 9.5
   explosion: {fileID: 1945618803, guid: 250b0f4c033d41f48931e1bbc179bc0d, type: 3}
   destroy_timer: 1
 --- !u!58 &4122576164586122721
@@ -188,7 +188,7 @@ Rigidbody2D:
   m_Mass: 1
   m_LinearDrag: 0
   m_AngularDrag: 0.05
-  m_GravityScale: 0
+  m_GravityScale: 0.25
   m_Material: {fileID: 0}
   m_IncludeLayers:
     serializedVersion: 2

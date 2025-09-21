@@ -255,7 +255,7 @@ public class Controller : MonoBehaviour
             else if (hit.CompareTag("push"))
             {
                 Vector2 dir = (hit.transform.position - magnetHead.transform.position).normalized;
-                hit.attachedRigidbody.AddForce(dir * magnetForce);
+                hit.attachedRigidbody.AddForce(dir * magnetForce * 3f);
             }
 
             else if (hit.CompareTag("hold"))

@@ -9,6 +9,8 @@ TagManager:
   - push
   - pull
   - hold
+  - Boss
+  - Obstacle
   layers:
   - Default
   - TransparentFX
