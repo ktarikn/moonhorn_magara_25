@@ -2542,10 +2542,10 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   maxItems: 2
-  carPicked: 0
-  gunPicked: 0
-  heliPicked: 0
-  magnetPicked: 0
+  carPicked: 1
+  gunPicked: 1
+  heliPicked: 1
+  magnetPicked: 1
   board: {fileID: 1152027847}
   controller: {fileID: 586909470}
   ButtonName: 
@@ -2559,10 +2559,10 @@ MonoBehaviour:
   downItem: {fileID: 0}
   chosenItem: {fileID: 0}
   chosenSlot: 
-  carB: {fileID: 0}
-  gunB: {fileID: 0}
-  magnetB: {fileID: 0}
-  heliB: {fileID: 0}
+  carB: {fileID: 44585911}
+  gunB: {fileID: 931703450}
+  magnetB: {fileID: 1401157723}
+  heliB: {fileID: 752307588}
   tick1: {fileID: 1968493522}
   tick2: {fileID: 1003359596}
   battery:

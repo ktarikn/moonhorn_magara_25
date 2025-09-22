@@ -220,6 +220,7 @@ public class BoardManager : MonoBehaviour
 
     void handleCar(GameObject car)
     {
+        controller.car = car;
         controller.carGroundCheck1 = car.GetComponent<itemHandler>().carG1.transform;
         controller.carGroundCheck2 = car.GetComponent<itemHandler>().carG2.transform;
         controller.canCarMove = true;

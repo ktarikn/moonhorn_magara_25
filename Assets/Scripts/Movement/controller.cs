@@ -108,16 +108,17 @@ public class Controller : MonoBehaviour
         rb.angularVelocity = -rollSpeed;
     }
 
+    public GameObject car;
     public void rideLeft()
     {
-        Vector2 leftDir = -transform.right; // local -X yönü
+        Vector2 leftDir = -car.transform.right; // local -X yönü
         rb.AddForce(leftDir * moveSpeed * 3);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
     }
 
     public void rideRight()
     {
-        Vector2 rightDir = transform.right; // local -X yönü
+        Vector2 rightDir = car.transform.right; // local -X yönü
         rb.AddForce(rightDir * moveSpeed * 3);
         rb.velocity = new Vector2(Mathf.Clamp(rb.velocity.x, -moveSpeed, moveSpeed), rb.velocity.y);
     }
