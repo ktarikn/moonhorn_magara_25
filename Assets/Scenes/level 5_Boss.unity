@@ -3520,6 +3520,7 @@ MonoBehaviour:
   isGrounded: 0
   gun: {fileID: 0}
   drag: 6.13
+  car: {fileID: 0}
   flySpeed: 15.1
   flyDuration: 1.19
   flyCooldown: 2.5
@@ -13220,7 +13221,7 @@ GameObject:
   - component: {fileID: 2109428586}
   - component: {fileID: 2109428585}
   m_Layer: 0
-  m_Name: hasar
+  m_Name: hasar ve Can
   m_TagString: Boss
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -13254,7 +13255,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 47f39d20d45900643bc0cbd58413adac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  lives: 5
+  boss_Health: 30
   sprite_1: {fileID: 2109428587}
   sprite_2: {fileID: 1982148062}
   hitColor: {r: 1, g: 0, b: 0, a: 1}

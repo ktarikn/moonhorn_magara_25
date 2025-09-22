@@ -7,7 +7,7 @@ using UnityEngine.SceneManagement;
 public class BossHealth : MonoBehaviour
 {
     // Start is called before the first frame update
-    public int lives = 3;
+    public int boss_Health = 20;
     private bool isTakingDamage = false;
 
     [SerializeField] private SpriteRenderer sprite_1, sprite_2;
@@ -27,13 +27,15 @@ public class BossHealth : MonoBehaviour
 
     // Update is called once per frame
 
-    public void getHit()
+    public void getHit(int damage)
     {
         if (isTakingDamage) return;
-        lives--;
+        boss_Health -= damage;
         StartCoroutine(Damage());
 
-        if (lives <= 0)
+        Debug.Log("boss can: " + boss_Health);
+
+        if (boss_Health <= 0)
         {
             Debug.Log("uzun robot öldü");
 

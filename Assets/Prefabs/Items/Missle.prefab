@@ -138,6 +138,7 @@ MonoBehaviour:
   speed: 9.5
   explosion: {fileID: 1945618803, guid: 250b0f4c033d41f48931e1bbc179bc0d, type: 3}
   destroy_timer: 1
+  damage_missile: 10
 --- !u!58 &4122576164586122721
 CircleCollider2D:
   m_ObjectHideFlags: 0

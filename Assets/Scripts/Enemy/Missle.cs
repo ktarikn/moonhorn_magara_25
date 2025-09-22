@@ -11,6 +11,9 @@ public class Missle : MonoBehaviour
     public Sprite explosion;
     private Rigidbody2D rb;
     public float destroy_timer = 1f;
+
+    [Space]
+    [SerializeField] private int damage_missile;
     void Start()
     {
         rb = GetComponent<Rigidbody2D>();
@@ -21,12 +24,12 @@ public class Missle : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
-       
+
     }
     private void OnCollisionEnter2D(Collision2D collision)
     {
 
-       
+
         GetComponent<SpriteRenderer>().sprite = explosion;
         GetComponent<SpriteRenderer>().color = Color.red;
         exploded = true;
@@ -37,8 +40,8 @@ public class Missle : MonoBehaviour
         rb.velocity = Vector2.zero;
         Destroy(gameObject, destroy_timer);
 
-        
-        
+
+
     }
 
     private void OnTriggerEnter2D(Collider2D collision)
@@ -54,9 +57,9 @@ public class Missle : MonoBehaviour
         else if (collision.gameObject.CompareTag("Boss"))
         {
             BossHealth boss = collision.GetComponent<BossHealth>();
-            boss.getHit();
+            boss.getHit(damage_missile);
         }
     }
 
-    
+
 }
